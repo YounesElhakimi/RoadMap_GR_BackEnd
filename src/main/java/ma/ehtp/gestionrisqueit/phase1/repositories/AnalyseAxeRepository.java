@@ -16,5 +16,6 @@ public interface AnalyseAxeRepository extends JpaRepository<AnalyseAxe, Long> {
   public   List<AnalyseAxe> findByOrganizationAndPhase(Organization organization , Phase phase);
   public   List<AnalyseAxe> findByOrganizationAndPhaseAndIsChecked(Organization organization, Phase phase,Boolean isChecked);
   public Optional<AnalyseAxe> findById(Long id);
+  public Integer countAllByOrganizationAndPhaseAndIsChecked(Organization organization , Phase phase , Boolean isChecked);
 
 }

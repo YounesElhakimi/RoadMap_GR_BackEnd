@@ -46,4 +46,14 @@ public class PolicieServiceImpl implements PolicieService {
     public Optional<Policie> findById(Long id) {
         return policieRepository.findById(id);
     }
+
+    @Override
+    public Integer countAllByOrganizationAndPhaseAndIsChecked(Organization organization, Phase phase, Boolean isChecked) {
+        return policieRepository.countAllByOrganizationAndPhaseAndIsChecked(organization,phase,isChecked);
+    }
+
+    @Override
+    public List<Policie> findByOrganizationAndPhaseAndIsChecked(Organization organization, Phase phase, Boolean isChecked) {
+        return this.policieRepository.findByOrganizationAndPhaseAndIsChecked(organization,phase,isChecked);
+    }
 }

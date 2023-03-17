@@ -2,6 +2,7 @@ package ma.ehtp.gestionrisqueit.phase1.repositories;
 
 
 import ma.ehtp.gestionrisqueit.phase0.modelles.Organization;
+import ma.ehtp.gestionrisqueit.phase0.modelles.Phase;
 import ma.ehtp.gestionrisqueit.phase1.modelles.AnalyseAxe;
 import ma.ehtp.gestionrisqueit.phase1.modelles.AttributePolicieAnalyseAxe;
 import ma.ehtp.gestionrisqueit.phase1.modelles.Policie;
@@ -13,10 +14,12 @@ import java.util.Optional;
 
 @Repository
 public interface AttributePolicieAnalyseAxeRepository extends JpaRepository<AttributePolicieAnalyseAxe, Long> {
- 
+
     public List<AttributePolicieAnalyseAxe> findByOrganization(Organization organization);
+    public List<AttributePolicieAnalyseAxe> findByOrganizationAndPhase(Organization organization , Phase phase);
     public List<AttributePolicieAnalyseAxe> findByAnalyseAxe(AnalyseAxe analyseAxe);
     public List<AttributePolicieAnalyseAxe> findByPolicie(Policie policie);
     public List<AttributePolicieAnalyseAxe> findByPolicieAndAnalyseAxe(Policie policie , AnalyseAxe analyseAxe);
     public Optional<AttributePolicieAnalyseAxe> findById(Long id);
+    public Integer countAllByOrganizationAndPhaseAndLevel(Organization organization ,Phase phase ,Integer level);
 }

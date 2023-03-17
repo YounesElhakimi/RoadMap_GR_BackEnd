@@ -51,4 +51,9 @@ public class AnalyseAxeServiceImpl implements AnalyseAxeService{
     public List<AnalyseAxe> findByOrganizationAndPhase(Organization organization, Phase phase) {
         return analyseAxeRepository.findByOrganizationAndPhase(organization,phase);
     }
+
+    @Override
+    public Integer countAllByOrganizationAndPhaseAndIsChecked(Organization organization, Phase phase, Boolean isChecked) {
+        return this.analyseAxeRepository.countAllByOrganizationAndPhaseAndIsChecked(organization,phase,isChecked);
+    }
 }

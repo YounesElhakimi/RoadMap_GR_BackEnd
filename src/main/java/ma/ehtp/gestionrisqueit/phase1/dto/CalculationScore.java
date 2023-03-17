@@ -1,15 +1,23 @@
 package ma.ehtp.gestionrisqueit.phase1.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
+
 public class CalculationScore {
 
-    private Integer Number0;
-    private Integer Number1;
-    private Integer Number2;
-    private Float percentage0;
-    private Float percentage1;
-    private Float percentage2;
+    private Integer number0;
+    private Integer number1;
+    private Integer number2;
+    private Double percentage0;
+    private Double percentage1;
+    private Double percentage2;
     private Integer  overallScore;
-    private String  maximumPossibleScore;
+    private Integer  maximumPossibleScore;
     private Integer maturityLevel;
 
 

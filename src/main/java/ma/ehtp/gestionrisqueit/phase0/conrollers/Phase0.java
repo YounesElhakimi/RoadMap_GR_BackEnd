@@ -3,17 +3,14 @@ package ma.ehtp.gestionrisqueit.phase0.conrollers;
 
 import ma.ehtp.gestionrisqueit.phase0.messages.ResponseMessage;
 import ma.ehtp.gestionrisqueit.phase0.modelles.Organization;
-import ma.ehtp.gestionrisqueit.phase0.services.OrganizationService;
+
 import ma.ehtp.gestionrisqueit.phase0.tools.U;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.view.RedirectView;
-import org.w3c.dom.stylesheets.LinkStyle;
+
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
@@ -65,7 +62,7 @@ public class Phase0 extends InitOrg{
     }
 
     @GetMapping("/ExOrg")
-    public List<Organization> getAllExOrg( HttpSession session){
+    public List<Organization> getAllExOrg(){
         List<Organization> organizationList = organizationService.findAll();
         return organizationList;
     }
@@ -82,6 +79,7 @@ public class Phase0 extends InitOrg{
 
             });
             message = "init org successfully: ";
+            System.out.println("init org successfully : " + organization);
 
             return ResponseEntity.status(HttpStatus.OK).body(new ResponseMessage(message));
 

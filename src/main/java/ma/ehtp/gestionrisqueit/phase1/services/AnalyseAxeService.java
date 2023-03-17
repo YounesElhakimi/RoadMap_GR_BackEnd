@@ -15,5 +15,7 @@ public interface AnalyseAxeService {
     public void deleteAll(List<AnalyseAxe> analyseAxeList);
     public   List<AnalyseAxe> findByOrganizationAndPhaseAndIsChecked(Organization organization, Phase phase, Boolean isChecked);
     public   List<AnalyseAxe> findByOrganizationAndPhase(Organization organization , Phase phase);
+    public Integer countAllByOrganizationAndPhaseAndIsChecked(Organization organization , Phase phase , Boolean isChecked);
+
 
 }

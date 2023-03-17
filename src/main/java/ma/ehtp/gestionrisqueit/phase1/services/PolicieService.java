@@ -16,4 +16,8 @@ public interface PolicieService {
     public List<Policie> findByOrganizationAndPhase(Organization organization , Phase phase);
 
     public Optional<Policie> findById(Long id);
+    public Integer countAllByOrganizationAndPhaseAndIsChecked(Organization organization , Phase phase , Boolean isChecked);
+
+    public List<Policie> findByOrganizationAndPhaseAndIsChecked(Organization organization , Phase phase , Boolean isChecked);
+
 }

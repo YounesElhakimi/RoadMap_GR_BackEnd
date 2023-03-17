@@ -161,15 +161,55 @@ public class Phase1Step1 extends InitOrg {
         List<Maturity> maturityList = maturityService.findByOrganization(organization);
         System.out.println("maturityList.size() " +maturityList.size());
         if (maturityList.size() == 0){
+            Integer step , sum = 1 ;
+            Integer def =0;
+            try {
+
+                Integer countAnX = analyseAxeService.countAllByOrganizationAndPhaseAndIsChecked(this.organization, Phase.valueOf(phase.toUpperCase()), true);
+                Integer countPolcs = policieService.countAllByOrganizationAndPhaseAndIsChecked(this.organization, Phase.valueOf(phase.toUpperCase()), true);
+
+                 step = (countAnX * countPolcs * 2) / 5 - 1;
+                 def  = (countAnX * countPolcs * 2 ) % 5;
+                 sum = 1;
+                System.out.println("countAnX : " + countAnX);
+                System.out.println("countPolcs : " + countPolcs);
+                System.out.println("calcul step : "+step );
+
+            }catch (Exception e){
+                System.out.println(e);
+                 step = 23 ;
+                 sum = 1;
+                System.out.println("init default "+ "step : "+step );
+            }
+
+
+
+
             maturityList = new ArrayList<>();
             maturityList.add(new Maturity(null,Phase.valueOf(phase.toUpperCase()),0,0,0,organization));
-            maturityList.add(new Maturity(null,Phase.valueOf(phase.toUpperCase()),1,1,72,organization));
-            maturityList.add(new Maturity(null,Phase.valueOf(phase.toUpperCase()),2,73,145,organization));
-            maturityList.add(new Maturity(null,Phase.valueOf(phase.toUpperCase()),3,146,212,organization));
-            maturityList.add(new Maturity(null,Phase.valueOf(phase.toUpperCase()),4,213,283,organization));
-            maturityList.add(new Maturity(null,Phase.valueOf(phase.toUpperCase()),5,284,356,organization));
+            for (int i = 1 ; i <=5 ; i++){
+
+                if (def > 0){
+                    maturityList.add(new Maturity(null,Phase.valueOf(phase.toUpperCase()),i,sum,sum + step+1,organization));
+                    sum = sum + step + 2;
+                    System.out.println("def : "+def);
+                    def--;
+                    System.out.println("def-- : "+def);
+
+                }else{
+                    maturityList.add(new Maturity(null,Phase.valueOf(phase.toUpperCase()),i,sum,sum + step,organization));
+                    sum = sum + step + 1;
+                }
+
+            }
+
+            maturityList.add(new Maturity(null,Phase.valueOf(phase.toUpperCase()),6,sum-1,sum ,organization));
+
             maturityList = maturityService.saveAll(maturityList);
+
         }
+
+        maturityList.forEach(maturity -> System.out.println(maturity));
         return ResponseEntity.status(HttpStatus.OK).body(maturityList);
 
     }
@@ -215,16 +255,16 @@ public class Phase1Step1 extends InitOrg {
         initOrg(session);
 
         String message ="";
-        /*try {
+        try {
 
             stakeholderService.deleteAll(
-                    stakeholderService.findByOrganization(organization)
+                    stakeholderService.findByOrganizationAndPhase(organization , Phase.valueOf(phase.toUpperCase()))
             );
         }catch (Exception e){
 
         }
 
-         */
+
 
         try {
 

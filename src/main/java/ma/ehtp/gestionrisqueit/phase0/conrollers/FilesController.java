@@ -45,7 +45,7 @@ public class FilesController  extends InitOrg{
 
 
     @PostMapping(value={"/upload" , "uploads/upload"})
-    public ResponseEntity<ResponseMessage> uploadFiles(@RequestParam("files") MultipartFile[] files , HttpSession session) {
+    public ResponseEntity<ResponseMessage> uploadFiles(@RequestParam("docs[]") MultipartFile[] files , HttpSession session) {
         String message = "";
         initOrg(session);
         String sousFolder = ""+organization.getId();
