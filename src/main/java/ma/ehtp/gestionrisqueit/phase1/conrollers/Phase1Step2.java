@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -58,8 +59,13 @@ public class Phase1Step2  extends InitOrg {
     @GetMapping("/{phase}/calculation_of_the_overall_score")
     public ResponseEntity<CalculationScore> getCalculationScore(HttpSession session , @PathVariable String phase){
         initOrg(session);
+        CalculationScore calculationScore = null;
+        if (Phase.valueOf(phase.toUpperCase()) == Phase.PHASE2)
+         calculationScore = attributePolicieAnalyseAxeService.calculeScoreForPahse2(organization , Phase.valueOf(phase.toUpperCase()));
+       else
+         calculationScore = attributePolicieAnalyseAxeService.calculeScore(organization , Phase.valueOf(phase.toUpperCase()));
 
-        CalculationScore calculationScore = attributePolicieAnalyseAxeService.calculeScore(organization , Phase.valueOf(phase.toUpperCase()));
+        System.out.println("calculationScore "+ calculationScore);
         return ResponseEntity.status(HttpStatus.OK).body(calculationScore);
     }
 

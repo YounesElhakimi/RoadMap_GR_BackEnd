@@ -23,5 +23,6 @@ public interface AttributePolicieAnalyseAxeService {
 
     public List<List<AttributePolicieAnalyseAxe>> findByOrganizationAndPhase(Organization organization , Phase phase);
     public CalculationScore calculeScore(Organization organization ,Phase phase);
-    
+    public CalculationScore calculeScoreForPahse2(Organization organization ,Phase phase);
+
 }
