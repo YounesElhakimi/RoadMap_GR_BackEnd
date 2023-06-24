@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
+import java.util.stream.Collectors;
 
 
 @Service
@@ -77,6 +77,7 @@ public class AttributePolicieAnalyseAxeServiceImpl implements AttributePolicieAn
         return null;
     }
 
+    /*
     @Override
     public List<List<AttributePolicieAnalyseAxe>> findByOrganizationAndPhase(Organization organization ,Phase phase){
 
@@ -140,6 +141,66 @@ public class AttributePolicieAnalyseAxeServiceImpl implements AttributePolicieAn
         return lists;
     }
 
+
+     */
+
+    @Override
+    public List<List<AttributePolicieAnalyseAxe>> findByOrganizationAndPhase(Organization organization ,Phase phase){
+
+
+        List<AttributePolicieAnalyseAxe> atrAxP = attributePolicieAnalyseAxeRepository.findByOrganizationAndPhase(organization,phase);
+        if (atrAxP.isEmpty()){
+            List<Policie> policies = policieRepository.findByOrganizationAndPhase(organization , phase);
+            List<AnalyseAxe> analyseAxes = analyseAxeRepository.findByOrganizationAndPhase(organization,phase);
+                for (Policie p :policies){
+                    Integer firstInitLevel = 0;
+                    for (AnalyseAxe a:analyseAxes){
+
+                        AttributePolicieAnalyseAxe atr = new AttributePolicieAnalyseAxe();
+                        atr.setAnalyseAxe(a);
+                        atr.setPolicie(p);
+                        atr.setOrganization(organization);
+                        atr.setPhase(phase);
+                        atr.setLevel(-1);
+                        attributePolicieAnalyseAxeRepository.save(atr);
+                    }
+                }
+
+
+        }
+
+        List<List<AttributePolicieAnalyseAxe>> lists = new ArrayList();
+        List<Policie> policies = policieRepository.findByOrganizationAndPhaseAndIsChecked(organization , phase , true);
+        List<AnalyseAxe> analyseAxes = analyseAxeRepository.findByOrganizationAndPhaseAndIsChecked(organization,phase,true);
+        for (Policie p :policies){
+            List<AttributePolicieAnalyseAxe> list = new ArrayList<>();
+            for (AnalyseAxe a:analyseAxes){
+                AttributePolicieAnalyseAxe apax = attributePolicieAnalyseAxeRepository.findByPolicieAndAnalyseAxe(p,a).get(0);
+                if (apax == null){
+                    apax =    attributePolicieAnalyseAxeRepository.save(
+                            new AttributePolicieAnalyseAxe(null,a.getPhase(),p,a,0,a.getOrganization())
+                    );
+                }
+
+                if (apax.getLevel() == -1)
+                    apax.setLevel(0);
+                list.add(
+                        apax.toBuilder().build()
+                );
+            }
+            lists.add(list);
+        }
+        System.out.println(lists.get(0).get(0).getLevel());
+        atrAxP.forEach((a)-> a.setLevel(-1));
+        System.out.println(lists.get(0).get(0).getLevel());
+
+        this.attributePolicieAnalyseAxeRepository.saveAll(atrAxP);
+        this.attributePolicieAnalyseAxeRepository.saveAll(lists.stream()
+                .flatMap(l -> l.stream())
+                .collect(Collectors.toList()));
+
+        return lists;
+    }
     @Override
     public CalculationScore calculeScore(Organization organization, Phase phase) {
         CalculationScore calculationScore = new CalculationScore();

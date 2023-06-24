@@ -2,6 +2,7 @@ package ma.ehtp.gestionrisqueit.phase1.modelles;
 
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import ma.ehtp.gestionrisqueit.phase0.modelles.Organization;
@@ -13,6 +14,8 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
+@Builder(toBuilder=true)
+
 public class AttributePolicieAnalyseAxe {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
