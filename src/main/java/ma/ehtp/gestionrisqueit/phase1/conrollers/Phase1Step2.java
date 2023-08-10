@@ -25,7 +25,11 @@ public class Phase1Step2  extends InitOrg {
     @GetMapping("/{phase}/AttributePolicieAnalyseAxe")
     public ResponseEntity<List<List<AttributePolicieAnalyseAxe>>> getAttributePolicieAnalyseAxe(HttpSession session ,@PathVariable String phase){
         initOrg(session);
-        List<List<AttributePolicieAnalyseAxe>> attributePolicieAnalyseAxes = attributePolicieAnalyseAxeService.findByOrganizationAndPhase(organization , Phase.valueOf(phase.toUpperCase()));
+        List<List<AttributePolicieAnalyseAxe>> attributePolicieAnalyseAxes = null;
+        if (phase.equals("phase2"))
+            attributePolicieAnalyseAxes =  attributePolicieAnalyseAxeService.findByOrganizationAndPhase2(organization , Phase.valueOf(phase.toUpperCase()));
+        else
+            attributePolicieAnalyseAxes =  attributePolicieAnalyseAxeService.findByOrganizationAndPhase(organization , Phase.valueOf(phase.toUpperCase()));
         return ResponseEntity.status(HttpStatus.OK).body(attributePolicieAnalyseAxes);
     }
 

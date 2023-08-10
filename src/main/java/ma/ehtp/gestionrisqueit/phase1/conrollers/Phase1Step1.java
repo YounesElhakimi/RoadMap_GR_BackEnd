@@ -159,14 +159,22 @@ public class Phase1Step1 extends InitOrg {
     public ResponseEntity<List<Maturity>> getMaturity(HttpSession session , @PathVariable String phase){
         initOrg(session);
         List<Maturity> maturityList = maturityService.findByOrganization(organization);
+
+        Integer countAnX = analyseAxeService.countAllByOrganizationAndPhaseAndIsChecked(this.organization, Phase.valueOf(phase.toUpperCase()), true);
+        Integer countPolcs = policieService.countAllByOrganizationAndPhaseAndIsChecked(this.organization, Phase.valueOf(phase.toUpperCase()), true);
+        System.out.println("countAnX : "+countAnX);
+        System.out.println("countPolcs : "+countPolcs);
         System.out.println("maturityList.size() " +maturityList.size());
+        if (maturityList.size() > 0){
+            if (maturityList.get(5).getEnd() != (countAnX * countPolcs * 2)){
+                maturityService.deleteAll(maturityList);
+                maturityList = new ArrayList<>();
+            }
+        }
         if (maturityList.size() == 0){
             Integer step , sum = 1 ;
             Integer def =0;
             try {
-
-                Integer countAnX = analyseAxeService.countAllByOrganizationAndPhaseAndIsChecked(this.organization, Phase.valueOf(phase.toUpperCase()), true);
-                Integer countPolcs = policieService.countAllByOrganizationAndPhaseAndIsChecked(this.organization, Phase.valueOf(phase.toUpperCase()), true);
 
                  step = (countAnX * countPolcs * 2) / 5 - 1;
                  def  = (countAnX * countPolcs * 2 ) % 5;

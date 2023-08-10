@@ -201,6 +201,64 @@ public class AttributePolicieAnalyseAxeServiceImpl implements AttributePolicieAn
 
         return lists;
     }
+
+    public List<List<AttributePolicieAnalyseAxe>> findByOrganizationAndPhase2(Organization organization ,Phase phase){
+
+
+        List<AttributePolicieAnalyseAxe> atrAxP = attributePolicieAnalyseAxeRepository.findByOrganizationAndPhase(organization,phase);
+        if (atrAxP.isEmpty()){
+            List<Policie> policies = policieRepository.findByOrganizationAndPhase(organization , phase);
+            List<AnalyseAxe> analyseAxes = analyseAxeRepository.findByOrganizationAndPhase(organization,phase);
+            for (Policie p :policies){
+                Integer firstInitLevel = 0;
+                for (AnalyseAxe a:analyseAxes){
+
+                    AttributePolicieAnalyseAxe atr = new AttributePolicieAnalyseAxe();
+                    atr.setAnalyseAxe(a);
+                    atr.setPolicie(p);
+                    atr.setOrganization(organization);
+                    atr.setPhase(phase);
+                    atr.setLevel(-2);
+                    attributePolicieAnalyseAxeRepository.save(atr);
+                }
+            }
+
+
+        }
+
+        List<List<AttributePolicieAnalyseAxe>> lists = new ArrayList();
+        List<Policie> policies = policieRepository.findByOrganizationAndPhaseAndIsChecked(organization , phase , true);
+        List<AnalyseAxe> analyseAxes = analyseAxeRepository.findByOrganizationAndPhaseAndIsChecked(organization,phase,true);
+        for (Policie p :policies){
+            List<AttributePolicieAnalyseAxe> list = new ArrayList<>();
+            for (AnalyseAxe a:analyseAxes){
+                AttributePolicieAnalyseAxe apax = attributePolicieAnalyseAxeRepository.findByPolicieAndAnalyseAxe(p,a).get(0);
+                if (apax == null){
+                    apax =    attributePolicieAnalyseAxeRepository.save(
+                            new AttributePolicieAnalyseAxe(null,a.getPhase(),p,a,(-1),a.getOrganization())
+                    );
+                }
+
+                if (apax.getLevel() == -2)
+                    apax.setLevel(-1);
+                list.add(
+                        apax.toBuilder().build()
+                );
+            }
+            lists.add(list);
+        }
+        System.out.println(lists.get(0).get(0).getLevel());
+        atrAxP.forEach((a)-> a.setLevel(-2));
+        System.out.println(lists.get(0).get(0).getLevel());
+
+        this.attributePolicieAnalyseAxeRepository.saveAll(atrAxP);
+        this.attributePolicieAnalyseAxeRepository.saveAll(lists.stream()
+                .flatMap(l -> l.stream())
+                .collect(Collectors.toList()));
+
+        return lists;
+    }
+
     @Override
     public CalculationScore calculeScore(Organization organization, Phase phase) {
         CalculationScore calculationScore = new CalculationScore();
@@ -223,6 +281,10 @@ public class AttributePolicieAnalyseAxeServiceImpl implements AttributePolicieAn
         List<Maturity> maturityList = this.maturityService.findByOrganizationAndPhase(organization,phase);
         System.out.println("OverallScore : "+calculationScore.getOverallScore());
 
+
+        if (calculationScore.getOverallScore() < 1)
+            calculationScore.setMaturityLevel(0);
+        else
         for(Maturity m : maturityList){
 
             if ( (calculationScore.getOverallScore() >= m.getStar()) && (calculationScore.getOverallScore() <= m.getEnd())){
@@ -283,8 +345,12 @@ public class AttributePolicieAnalyseAxeServiceImpl implements AttributePolicieAn
         List<Maturity> maturityList = this.maturityService.findByOrganizationAndPhase(organization,phase);
         System.out.println("OverallScore : "+calculationScore.getOverallScore());
 
+        if (calculationScore.getOverallScore() < 1)
+            calculationScore.setMaturityLevel(0);
+        else
         for(Maturity m : maturityList){
-
+            System.out.println(m);
+            System.out.println((calculationScore.getOverallScore() >= m.getStar()) && (calculationScore.getOverallScore() <= m.getEnd()));
             if ( (calculationScore.getOverallScore() >= m.getStar()) && (calculationScore.getOverallScore() <= m.getEnd())){
                 calculationScore.setMaturityLevel(m.getLevel());
                 break;
