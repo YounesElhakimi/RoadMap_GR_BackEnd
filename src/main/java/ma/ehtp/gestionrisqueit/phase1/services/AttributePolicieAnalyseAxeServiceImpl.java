@@ -333,13 +333,13 @@ public class AttributePolicieAnalyseAxeServiceImpl implements AttributePolicieAn
         Double overallScor =  0.0;
         for (AttributePolicieAnalyseAxe a : axeList){
             if (a.getLevel() < 0) continue;
+            System.out.println(a.getPolicie().getNum());
             if (a.getPolicie().getNum() == 1 || a.getPolicie().getNum() == 2 ){
-                overallScor += 0.6 * a.getLevel();
+                overallScor += 0.6 * a.getLevel() / 2;
                 continue;
             }
-            overallScor += 0.4 * a.getLevel();
+            overallScor += 0.4 * a.getLevel() / 12;
         }
-        overallScor = overallScor/14;
         calculationScore.setOverallScore(overallScor);
 
         List<Maturity> maturityList = this.maturityService.findByOrganizationAndPhase(organization,phase);
@@ -358,6 +358,11 @@ public class AttributePolicieAnalyseAxeServiceImpl implements AttributePolicieAn
         }
 
 
+       calculationScore.setMaturityLevel((int) Math.round(calculationScore.getOverallScore()));
+
         return calculationScore;
     }
+
+
+
 }
