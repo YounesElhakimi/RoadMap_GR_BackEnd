@@ -357,9 +357,7 @@ public class AttributePolicieAnalyseAxeServiceImpl implements AttributePolicieAn
             }
         }
 
-
        calculationScore.setMaturityLevel((int) Math.round(calculationScore.getOverallScore()));
-
         return calculationScore;
     }
 
